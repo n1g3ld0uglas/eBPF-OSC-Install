@@ -1,0 +1,19 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: nigel-eks-cluster
+  region: eu-west-1
+  version: '1.18'
+nodeGroups:
+  - name: ng-nigel-eks-cluster
+    instanceType: t3.medium
+    minSize: 0
+    maxSize: 3
+    desiredCapacity: 3
+    amiFamily: Bottlerocket
+    iam:
+      attachPolicyARNs:
+      - arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+      - arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+      - arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly
+      - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
