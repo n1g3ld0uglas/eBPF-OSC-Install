@@ -3,7 +3,7 @@
 
 The easiest way to start an EKS cluster that meets eBPF mode’s requirements is to use Amazon’s Bottlerocket OS, instead of the default. Bottlerocket is a container-optimised OS with an emphasis on security; it has a version of the kernel which is compatible with eBPF mode.
 
-##Installing EKSCTL
+## Installing EKSCTL
 Download and extract the latest release of eksctl with the following command
 ```
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
@@ -17,7 +17,7 @@ Test that your installation was successful with the following command
 eksctl version
 ```
 
-##Installing KUBECTL
+## Installing KUBECTL
 Download the vended kubectl binary for your cluster's Kubernetes version from Amazon S3
 ```
 curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
@@ -39,7 +39,7 @@ After you install kubectl , you can verify its version with the following comman
 kubectl version --short --client
 ```
 
-##Installing a 3 node cluster
+## Installing a 3 node cluster
 To create a 3-node test cluster with a Bottlerocket node group, run the command below. 
 ```
 wget https://raw.githubusercontent.com/n1g3ld0uglas/eBPF-OSC-Install/main/cluster.config.yaml
@@ -55,7 +55,7 @@ It is important to use the config-file approach to creating a cluster in order t
 eksctl create cluster --config-file cluster.config.yaml
 ```
 
-##Installing the Tigera Operator
+## Installing the Tigera Operator
 Install the Tigera Operator
 ```
 kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
