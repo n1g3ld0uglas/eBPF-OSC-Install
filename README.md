@@ -52,3 +52,54 @@ Install the Tigera Operator
 ```
 kubectl create -f https://docs.projectcalico.org/manifests/tigera-operator.yaml
 ```
+
+Download the installation file
+```
+wget https://raw.githubusercontent.com/n1g3ld0uglas/eBPF-OSC-Install/main/install.yaml
+```
+
+Using kubectl, apply the following Installation resource to tell the operator to install Calico; note the flexVolumePath tweak, which is needed for Bottlerocket.
+```
+kubectl apply -f install.yaml
+```
+
+Confirm all Calico pods are running
+```
+kubectl get pods -A
+```
+
+Confirm all Calico nodes are healthy
+```
+kubectl get nodes -A
+```
+
+# Configure Calico to connect directly to the API server
+When configuring Calico to connect to the API server, we need to use the load balanced domain name created by EKS. 
+It can be extracted from kube-proxy’s config map by running:
+
+```
+kubectl get cm -n kube-system kube-proxy -o yaml | grep server
+```
+
+which should show the server name, for example:
+```
+server: https://d881b853ae9313e00302a84f1e346a77.gr7.us-west-2.eks.amazonaws.com
+```
+
+In this example, you would use d881b853ae9313e00302a84f1e346a77.gr7.us-west-2.eks.amazonaws.com for KUBERNETES_SERVICE_HOST and 443 (the default for HTTPS) for KUBERNETES_SERVICE_PORT when creating the config map.
+
+# Configuring the ConfigMap with server and port credentials
+
+Since we used the operator to install Calico, create the following config map in the calico-system namespace using the host and port determined above:
+
+```
+wget config-map.yaml
+```
+
+```
+vi config-map.yaml
+```
+
+```
+kubectl apply -f config-map.yaml
+```
