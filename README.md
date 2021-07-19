@@ -147,3 +147,28 @@ kubectl patch ds -n kube-system kube-proxy --type merge -p '{"spec":{"template":
 ```
 
 * Since disabling eBPF mode is disruptive, monitor existing workloads to make sure they reestablish connections.
+
+
+## Patch the Felix Agent:
+
+If you choose not to disable kube-proxy (for example, because it is managed by your Kubernetes distribution), then you must change Felix configuration parameter BPFKubeProxyIptablesCleanupEnabled to false. 
+
+Download the latest version of calicoctl
+```
+curl -o calicoctl -O -L  "https://github.com/projectcalico/calicoctl/releases/download/v3.19.1/calicoctl" 
+```
+
+Make it an executable program:
+```
+chmod +x calicoctl
+```
+
+Make the changes via calicoctl as follows:
+```
+./calicoctl patch felixconfiguration default --patch='{"spec": {"bpfKubeProxyIptablesCleanupEnabled": false}}'
+```
+
+Confirm changes were enforced:
+```
+./calicoctl get felixconfiguration default -o yaml
+```
