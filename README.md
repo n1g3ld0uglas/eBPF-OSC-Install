@@ -180,6 +180,8 @@ Confirm changes were enforced:
 ./calicoctl get felixconfiguration default -o yaml
 ```
 
+## BPF Observability Tools:
+
 If 'tc' (traffic control) command does not work, you will need to install 'iproute' in EKS cloudshell
 ```
 sudo yum install iproute
@@ -194,3 +196,18 @@ tc -s qdisc show dev eth0
 
 The output should look like the following; find the clsact qdisc, which is the attachment point for eBPF programs. 
 The -s option to tc causes tc to display the count of dropped packets, which amounts to the count of packets dropped by the eBPF programs.
+
+## The calico-bpf tool:
+
+Since BPF maps contain binary data, the Calico Enterprise team wrote a tool to examine Calico Enterprise’s BPF maps. 
+The tool is embedded in the cnx-node container image. To run the tool:
+
+Find the name of the cnx-node Pod on the host of interest using
+```
+kubectl get pod -o wide -n calico-system
+```
+
+For example, to show the tool’s help:
+```
+kubectl exec -n calico-system calico-node-abcdef -- calico-node -bpf help
+```
