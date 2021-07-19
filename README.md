@@ -55,6 +55,12 @@ It is important to use the config-file approach to creating a cluster in order t
 eksctl create cluster --config-file cluster.config.yaml
 ```
 
+Confirm the node cluster was correctly configured:
+```
+kubectl get nodes -A
+```
+
+
 ## Installing the Tigera Operator
 Install the Tigera Operator
 ```
@@ -66,20 +72,21 @@ Download the installation file
 wget https://raw.githubusercontent.com/n1g3ld0uglas/eBPF-OSC-Install/main/install.yaml
 ```
 
+Confirm Calico pods are not running:
+```
+kubectl get pods -A
+```
+
 Using kubectl, apply the following Installation resource to tell the operator to install Calico; note the flexVolumePath tweak, which is needed for Bottlerocket.
 ```
 kubectl apply -f install.yaml
 ```
 
-Confirm all Calico pods are running
+Test again and confirm all Calico pods are running
 ```
 kubectl get pods -A
 ```
 
-Confirm all Calico nodes are healthy
-```
-kubectl get nodes -A
-```
 
 ## Configure Calico to connect directly to the API server
 When configuring Calico to connect to the API server, we need to use the load balanced domain name created by EKS. 
@@ -165,7 +172,7 @@ chmod +x calicoctl
 
 Make the changes via calicoctl as follows:
 ```
-./calicoctl patch felixconfiguration default --patch='{"spec": {"bpfKubeProxyIptablesCleanupEnabled": false}}'
+./calicoctl patch felixconfiguration default --patch='{"spec": {"bpfKubeProxyIptablesCleanupEnabled": true}}'
 ```
 
 Confirm changes were enforced:
