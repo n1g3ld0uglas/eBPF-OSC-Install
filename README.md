@@ -179,3 +179,18 @@ Confirm changes were enforced:
 ```
 ./calicoctl get felixconfiguration default -o yaml
 ```
+
+If 'tc' (traffic control) command does not work, you will need to install 'iproute' in EKS cloudshell
+```
+sudo yum install iproute
+```
+
+To check if an eBPF program is dropping packets, you can use the tc command-line tool. 
+For example, if you are worried that the eBPF program attached to eth0 is dropping packets, you can run the following command:
+
+```
+tc -s qdisc show dev eth0
+```
+
+The output should look like the following; find the clsact qdisc, which is the attachment point for eBPF programs. 
+The -s option to tc causes tc to display the count of dropped packets, which amounts to the count of packets dropped by the eBPF programs.
