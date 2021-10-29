@@ -211,3 +211,32 @@ For example, to show the tool’s help:
 ```
 kubectl exec -n calico-system calico-node-abcdef -- calico-node -bpf help
 ```
+
+## Best way to installed eBPF-ready cluster:
+Tested eBPF with EKS, so you can create a new nodegroup for your eks cluster with Bottlerocket AMI, and scale down the existing nodegroup to 0. <br/>
+I think it should work with other platform as well.
+
+## nodepool.yaml
+
+```
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: "${EKS_CLUSTER}"
+  region: "${AWS_REGION}"
+  version: "${EKS_VERSION}"
+managedNodeGroups:
+  - name: ebpf-pool # Customizable. The name of the node pool.
+    amiFamily: Bottlerocket
+    instanceType: t3.xlarge # Customizable. The instance type for the node pool.
+    desiredCapacity: 3 # Customizable. The initial amount of nodes to have live.
+    ssh:
+        # uncomment lines below to allow SSH access to the nodes using existing EC2 key pair
+        publicKeyName: ${KEYPAIR_NAME}
+        allow: true
+
+    # enable all of the control plane logs:
+    cloudWatch:
+      clusterLogging:
+        enableTypes: ["*"]
+  ```        
